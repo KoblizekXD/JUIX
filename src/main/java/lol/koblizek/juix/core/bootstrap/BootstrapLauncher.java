@@ -1,6 +1,5 @@
 package lol.koblizek.juix.core.bootstrap;
 
-import lol.koblizek.juix.api.internal.Internal;
 import lol.koblizek.juix.api.libload.LibLoad;
 import lol.koblizek.juix.core.error.ApplicationNotFoundException;
 import lol.koblizek.juix.core.reflect.Reflection;
