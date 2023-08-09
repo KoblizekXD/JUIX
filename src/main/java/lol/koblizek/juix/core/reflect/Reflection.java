@@ -2,6 +2,7 @@ package lol.koblizek.juix.core.reflect;
 
 import lol.koblizek.juix.core.Application;
 import lol.koblizek.juix.core.IDisposable;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.reflections.Reflections;
 
@@ -14,6 +15,8 @@ public final class Reflection {
     public static final Reflections REFLECTIONS
             = new Reflections();
     private final Class<?> type;
+    @Getter
+    private Object instance;
 
     private Reflection(Class<?> type) {
         this.type = type;
@@ -34,6 +37,14 @@ public final class Reflection {
             return null;
         }
     }
+    public void setNewInstance() {
+        try {
+            instance = type.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            log.error("Failed to instantiate type: {}", e.getMessage());
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public Class<? extends IDisposable> getType() {
         log.warn("getType may produce errors if used incorrectly");
