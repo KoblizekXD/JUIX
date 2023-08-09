@@ -35,6 +35,16 @@ java {
     }
 }
 
+tasks {
+    val ENABLE_PREVIEW = "--enable-preview"
+    withType<JavaCompile> {
+        options.compilerArgs.add(ENABLE_PREVIEW)
+    }
+    withType<JavaExec> {
+        jvmArgs(ENABLE_PREVIEW)
+    }
+}
+
 tasks.test {
     useJUnitPlatform()
 }
