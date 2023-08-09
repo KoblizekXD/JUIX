@@ -1,10 +1,12 @@
 package lol.koblizek.juix.core.reflect;
 
 import lol.koblizek.juix.core.Application;
+import lol.koblizek.juix.core.IDisposable;
 import lombok.extern.log4j.Log4j2;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
 @Log4j2
@@ -31,5 +33,11 @@ public final class Reflection {
             log.error("Failed to get declared method: {}, null will be returned", name);
             return null;
         }
+    }
+    @SuppressWarnings("unchecked")
+    public Class<? extends IDisposable> getType() {
+        log.warn("getType may produce errors if used incorrectly");
+        return (Class<? extends IDisposable>) ((ParameterizedType) getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

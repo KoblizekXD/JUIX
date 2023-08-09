@@ -1,7 +1,7 @@
 <Configuration>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%style{[}{yellow}%style{%d{dd/MM/yyyy HH:mm:ss}}{magenta}%style{]}{yellow} %style{[}{yellow}%style{%logger{1} | %t}{cyan}%style{]}{yellow} %highlight{(%level)}: %msg\n" disableAnsi="false"/>
+            <PatternLayout pattern="%style{[}{yellow}%style{%d{dd/MM/yyyy HH:mm:ss}}{magenta}%style{]}{yellow} %style{[}{yellow}%style{%logger{1}/%t}{cyan}%style{]}{yellow} %highlight{(%level)}: %msg\n" disableAnsi="false"/>
         </Console>
     </Appenders>
     <Loggers>

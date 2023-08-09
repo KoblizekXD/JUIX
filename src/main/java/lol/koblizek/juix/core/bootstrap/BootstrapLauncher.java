@@ -7,8 +7,10 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public final class BootstrapLauncher {
+    @SuppressWarnings("deprecation")
     private static void launch() {
         try {
+            log.warn("Using deprecated reflection features: migration required in future");
             var type = Reflection.getApplicationClasses().stream().findFirst();
             if (type.isEmpty()) {
                 log.fatal("No applications found, stopping...", new ApplicationNotFoundException());
@@ -18,7 +20,7 @@ public final class BootstrapLauncher {
             var libload = LibLoad.inType(type.get());
             libload.system("kernel32", "user32");
             libload.loadAll();
-            app.getMethod("onInitialize").invoke(type.get().newInstance());
+            app.getMethod("onInitialize").invoke(type.get().newInstance(), app.getType().newInstance());
         } catch (Exception e) {
             log.fatal("Application failed to run with exception: ", e); 
         }
