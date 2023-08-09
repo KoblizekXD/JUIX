@@ -15,8 +15,6 @@ public final class BootstrapLauncher {
         try {
             log.warn("Using deprecated reflection features: migration required in future");
             var type = Reflection.getApplicationClasses().stream().findFirst();
-            Internal<String> internal = new Internal<>("yes");
-            internal.get();
             if (type.isEmpty()) {
                 log.fatal("No applications found, stopping...", new ApplicationNotFoundException());
                 System.exit(1);
