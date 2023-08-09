@@ -1,12 +1,15 @@
 <Configuration>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%style{[}{yellow}%style{%d{dd/MM/yyyy HH:mm:ss}}{magenta}%style{]}{yellow} %style{[}{yellow}%style{logger %logger{1} | thread %t}{cyan}%style{]}{yellow} %highlight{(%level)}: %msg\n" disableAnsi="false"/>
+            <PatternLayout pattern="%style{[}{yellow}%style{%d{dd/MM/yyyy HH:mm:ss}}{magenta}%style{]}{yellow} %style{[}{yellow}%style{%logger{1} | %t}{cyan}%style{]}{yellow} %highlight{(%level)}: %msg\n" disableAnsi="false"/>
         </Console>
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="org.reflections" level="OFF">
+            <AppenderRef ref="Console" />
+        </Logger>
     </Loggers>
 </Configuration>
