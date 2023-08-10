@@ -40,4 +40,11 @@ public final class WindowClass {
         short atom = RegisterClassA(wndClassA);
         if (atom == 0) BootstrapLauncher.writeWin32Error(GetLastError());
     }
+
+    public MemorySegment getClassName() {
+        return WNDCLASSA.lpszClassName$get(wndClassA);
+    }
+    public MemorySegment getHInstance() {
+        return WNDCLASSA.hInstance$get(wndClassA);
+    }
 }
