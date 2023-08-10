@@ -37,8 +37,6 @@ public final class LibLoad {
         this.system = names;
     }
     public void loadAll() {
-        if (!present) return;
-
         var libraries = getLoadingLibraries();
         log.info("Native libraries preload. Found {} system libraries and {} user-defined", system.length, libraries.length);
         log.info("+---system libraries:");
@@ -50,6 +48,15 @@ public final class LibLoad {
                 log.info("\t+---{}(FAILED)", lib);
             }
         }
-
+        if (!present) return;
+        log.info("+---user-defined libraries:");
+        for (String lib : getLoadingLibraries()) {
+            try {
+                System.loadLibrary(lib);
+                log.info("\t+---{}(SUCCESS)", lib);
+            } catch (Exception e) {
+                log.info("\t+---{}(FAILED)", lib);
+            }
+        }
     }
 }
