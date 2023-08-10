@@ -36,6 +36,8 @@ public final class BootstrapLauncher {
                 WindowClass windowClass = new WindowClass(arena)
                         .setClassName(((Application<?>) app.getInstance()).getName())
                         .setWindowProcess(new WindowProcess());
+                log.info("Registering window class...");
+                windowClass.register();
                 app.getAsApplication().internalWindowClass.set(windowClass);
             }
         } catch (Exception e) {

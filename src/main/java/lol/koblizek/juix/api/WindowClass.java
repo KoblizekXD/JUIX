@@ -9,6 +9,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SegmentScope;
 
 import static com.microsoft.win32.windows_h_15.GetModuleHandleA;
+import static com.microsoft.win32.windows_h_16.RegisterClassA;
 import static java.lang.foreign.MemorySegment.NULL;
 
 public final class WindowClass {
@@ -31,5 +32,9 @@ public final class WindowClass {
     public WindowClass setInstance() {
         WNDCLASSA.hInstance$set(wndClassA, GetModuleHandleA(NULL));
         return this;
+    }
+    public void register() {
+        Internal.check();
+        RegisterClassA(wndClassA);
     }
 }
