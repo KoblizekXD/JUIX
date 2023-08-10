@@ -1,17 +1,18 @@
 package lol.koblizek.juix.api.window;
 
+import com.microsoft.win32.MSG;
 import lol.koblizek.juix.api.WindowClass;
 import lol.koblizek.juix.core.IDisposable;
 import lol.koblizek.juix.core.bootstrap.BootstrapLauncher;
 import lombok.extern.log4j.Log4j2;
 
 import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
 
 import static com.microsoft.win32.windows_h_14.GetLastError;
-import static com.microsoft.win32.windows_h_16.CreateWindowExA;
-import static com.microsoft.win32.windows_h_16.DestroyWindow;
+import static com.microsoft.win32.windows_h_16.*;
 import static com.microsoft.win32.windows_h_34.WS_OVERLAPPEDWINDOW;
+import static com.microsoft.win32.windows_h_34.WS_VISIBLE;
+import static java.lang.foreign.MemorySegment.NULL;
 
 @Log4j2
 public class Window implements IDisposable {
@@ -30,16 +31,24 @@ public class Window implements IDisposable {
                 WS_OVERLAPPEDWINDOW(),
                 100, 100,
                 300, 300,
-                MemorySegment.NULL,
-                MemorySegment.NULL,
+                NULL,
+                NULL,
                 windowClass.getHInstance(),
-                MemorySegment.NULL
+                NULL
         );
-        if (handle == MemorySegment.NULL) {
+        if (handle == NULL) {
             BootstrapLauncher.writeWin32Error(GetLastError());
             throw new RuntimeException();
         } else {
             return new Handle(handle);
+        }
+    }
+    public void show(Arena arena) {
+        ShowWindow(handle.getHandleAsMemory(), 1);
+        var msg = MSG.allocate(arena);
+        while (GetMessageW(msg, NULL, 0, 0) > 0) {
+            TranslateMessage(msg);
+            DispatchMessageA(msg);
         }
     }
     @Override

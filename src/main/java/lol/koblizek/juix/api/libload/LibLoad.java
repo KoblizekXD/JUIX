@@ -37,7 +37,7 @@ public final class LibLoad {
         this.system = names;
     }
     public void loadAll() {
-        if (!present) return;
+        //if (!present) return;
 
         var libraries = getLoadingLibraries();
         log.info("Native libraries preload. Found {} system libraries and {} user-defined", system.length, libraries.length);
