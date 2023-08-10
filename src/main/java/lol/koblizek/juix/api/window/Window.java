@@ -14,6 +14,9 @@ import static com.microsoft.win32.windows_h_34.WS_OVERLAPPEDWINDOW;
 import static com.microsoft.win32.windows_h_34.WS_VISIBLE;
 import static java.lang.foreign.MemorySegment.NULL;
 
+/**
+ * Main window classes used for displaying content on the screen.
+ */
 @Log4j2
 public class Window implements IDisposable {
     private final WindowClass windowClass;
