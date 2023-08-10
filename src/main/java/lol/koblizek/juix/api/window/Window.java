@@ -44,11 +44,11 @@ public class Window implements IDisposable {
         }
     }
     public void show(Arena arena) {
-        ShowWindow(handle.getHandleAsMemory(), WS_VISIBLE());
+        ShowWindow(handle.getHandleAsMemory(), 1);
         var msg = MSG.allocate(arena);
         while (GetMessageW(msg, NULL, 0, 0) > 0) {
             TranslateMessage(msg);
-            DispatchMessageW(msg);
+            DispatchMessageA(msg);
         }
     }
     @Override

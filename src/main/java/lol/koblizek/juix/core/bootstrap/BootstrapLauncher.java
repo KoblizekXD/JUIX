@@ -11,9 +11,12 @@ import lol.koblizek.juix.core.IDisposable;
 import lol.koblizek.juix.core.bootstrap.events.PreInitializationEvent;
 import lol.koblizek.juix.core.error.ApplicationNotFoundException;
 import lol.koblizek.juix.core.reflect.Reflection;
+import lol.koblizek.juix.core.resource.ResourceManager;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.IOException;
 import java.lang.foreign.Arena;
+import java.util.Properties;
 
 import static com.microsoft.win32.windows_h_14.GetLastError;
 
@@ -26,33 +29,39 @@ public final class BootstrapLauncher {
     @SuppressWarnings("deprecation")
     private static void launch() {
         try {
-            log.warn("Using deprecated reflection features: migration required in future");
-            var type = Reflection.getApplicationClasses().stream().findFirst();
-            if (type.isEmpty()) {
-                log.fatal("No applications found, stopping...", new ApplicationNotFoundException());
-                System.exit(1);
-            }
-            var app = Reflection.of(type.get());
-            var libload = LibLoad.inType(type.get());
+            var type = (Class<? extends Application<? extends IDisposable>>) Class.forName(loadProperties());
+            var libload = LibLoad.inType(type);
             libload.system("kernel32", "user32");
             libload.loadAll();
-            app.setNewInstance();
-            EventManager.invoke(new PreInitializationEvent(app.getAsApplication()));
-            app.getMethod("onInitialize").invoke(app.getInstance(), app.getType().newInstance());
+            Application application = type.newInstance();
+            EventManager.invoke(new PreInitializationEvent(application));
+            //app.getMethod("onInitialize").invoke(app.getInstance(), app.getType().newInstance());
             log.info("Initializing internal api...");
             try (Arena arena = Arena.openConfined()) {
                 WindowClass windowClass = new WindowClass(arena)
-                        .setClassName(app.getAsApplication().getName())
+                        .setClassName(application.getName())
                         .setWindowProcess(new WindowProcess());
                 log.info("Registering window class...");
                 windowClass.register();
                 Window window = new Window(windowClass);
-                app.getAsApplication().internalWindowClass.set(windowClass);
-                app.getAsApplication().internalWindow.set(window);
+                application.internalWindowClass.set(windowClass);
+                application.internalWindow.set(window);
+                application.onInitialize(window);
                 window.show(arena);
             }
         } catch (Exception e) {
             log.fatal("Application failed to run with exception: ", e); 
+        }
+    }
+    public static String loadProperties() {
+        var props = ResourceManager.getInstance()
+                .getResource("/juix.properties");
+        Properties properties = new Properties();
+        try {
+            properties.load(props.stream());
+            return properties.getProperty("entrypoint");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
