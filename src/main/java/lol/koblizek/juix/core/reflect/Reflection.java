@@ -5,6 +5,7 @@ import lol.koblizek.juix.core.IDisposable;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.reflections.Reflections;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -51,7 +52,7 @@ public final class Reflection {
         return (Class<? extends IDisposable>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
     }
-    public Application<?> getAsApplication() {
-        return (Application<?>) getInstance();
+    public <T extends IDisposable> Application<T> getAsApplication() {
+        return (Application<T>) getInstance();
     }
 }

@@ -5,7 +5,9 @@ import lol.koblizek.juix.api.WindowClass;
 import lol.koblizek.juix.api.WindowProcess;
 import lol.koblizek.juix.api.event.EventManager;
 import lol.koblizek.juix.api.libload.LibLoad;
+import lol.koblizek.juix.api.window.Window;
 import lol.koblizek.juix.core.Application;
+import lol.koblizek.juix.core.IDisposable;
 import lol.koblizek.juix.core.bootstrap.events.PreInitializationEvent;
 import lol.koblizek.juix.core.error.ApplicationNotFoundException;
 import lol.koblizek.juix.core.reflect.Reflection;
@@ -35,16 +37,19 @@ public final class BootstrapLauncher {
             libload.system("kernel32", "user32");
             libload.loadAll();
             app.setNewInstance();
-            EventManager.invoke(new PreInitializationEvent((Application<?>) app.getInstance()));
+            EventManager.invoke(new PreInitializationEvent(app.getAsApplication()));
             app.getMethod("onInitialize").invoke(app.getInstance(), app.getType().newInstance());
             log.info("Initializing internal api...");
             try (Arena arena = Arena.openConfined()) {
                 WindowClass windowClass = new WindowClass(arena)
-                        .setClassName(((Application<?>) app.getInstance()).getName())
+                        .setClassName(app.getAsApplication().getName())
                         .setWindowProcess(new WindowProcess());
                 log.info("Registering window class...");
                 windowClass.register();
+                Window window = new Window(windowClass);
                 app.getAsApplication().internalWindowClass.set(windowClass);
+                app.getAsApplication().internalWindow.set(window);
+                window.show(arena);
             }
         } catch (Exception e) {
             log.fatal("Application failed to run with exception: ", e); 
