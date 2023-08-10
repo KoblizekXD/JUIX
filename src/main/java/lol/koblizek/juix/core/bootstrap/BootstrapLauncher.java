@@ -35,7 +35,6 @@ public final class BootstrapLauncher {
             libload.loadAll();
             Application application = type.newInstance();
             EventManager.invoke(new PreInitializationEvent(application));
-            //app.getMethod("onInitialize").invoke(app.getInstance(), app.getType().newInstance());
             log.info("Initializing internal api...");
             try (Arena arena = Arena.openConfined()) {
                 WindowClass windowClass = new WindowClass(arena)

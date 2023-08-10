@@ -50,6 +50,15 @@ public final class LibLoad {
                 log.info("\t+---{}(FAILED)", lib);
             }
         }
-
+        if (!present) return;
+        log.info("+---user-defined libraries:");
+        for (String lib : getLoadingLibraries()) {
+            try {
+                System.loadLibrary(lib);
+                log.info("\t+---{}(SUCCESS)", lib);
+            } catch (Exception e) {
+                log.info("\t+---{}(FAILED)", lib);
+            }
+        }
     }
 }
