@@ -3,11 +3,13 @@ package lol.koblizek.juix.api;
 import com.microsoft.win32.WNDCLASSA;
 import com.microsoft.win32.WNDPROC;
 import lol.koblizek.juix.api.internal.Internal;
+import lol.koblizek.juix.core.bootstrap.BootstrapLauncher;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SegmentScope;
 
+import static com.microsoft.win32.windows_h_14.GetLastError;
 import static com.microsoft.win32.windows_h_15.GetModuleHandleA;
 import static com.microsoft.win32.windows_h_16.RegisterClassA;
 import static java.lang.foreign.MemorySegment.NULL;
@@ -35,6 +37,7 @@ public final class WindowClass {
     }
     public void register() {
         Internal.check();
-        RegisterClassA(wndClassA);
+        short atom = RegisterClassA(wndClassA);
+        if (atom == 0) BootstrapLauncher.writeWin32Error(GetLastError());
     }
 }

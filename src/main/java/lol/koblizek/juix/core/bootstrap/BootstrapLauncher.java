@@ -13,8 +13,14 @@ import lombok.extern.log4j.Log4j2;
 
 import java.lang.foreign.Arena;
 
+import static com.microsoft.win32.windows_h_14.GetLastError;
+
 @Log4j2
 public final class BootstrapLauncher {
+    public static void writeWin32Error(int code) {
+        log.error("Failed to dispose window: {}", code);
+        log.error("Please refer to Microsoft documentation for further details");
+    }
     @SuppressWarnings("deprecation")
     private static void launch() {
         try {
