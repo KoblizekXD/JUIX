@@ -1,5 +1,7 @@
 package lol.koblizek.juix.core.bootstrap;
 
+import com.microsoft.win32.WNDCLASSA;
+import lol.koblizek.juix.api.WindowClass;
 import lol.koblizek.juix.api.event.EventManager;
 import lol.koblizek.juix.api.libload.LibLoad;
 import lol.koblizek.juix.core.Application;
@@ -30,7 +32,7 @@ public final class BootstrapLauncher {
             app.getMethod("onInitialize").invoke(app.getInstance(), app.getType().newInstance());
             log.info("Initializing internal api...");
             try (Arena arena = Arena.openConfined()) {
-
+                WindowClass windowClass = new WindowClass(arena);
             }
         } catch (Exception e) {
             log.fatal("Application failed to run with exception: ", e); 
