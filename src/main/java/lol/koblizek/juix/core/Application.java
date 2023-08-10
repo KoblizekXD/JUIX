@@ -5,7 +5,7 @@ import lol.koblizek.juix.api.internal.Internal;
 import lol.koblizek.juix.core.bootstrap.ApplicationConfiguration;
 
 public abstract class Application<T> {
-    public Internal<WindowClass> internalWindowClass;
+    public final Internal<WindowClass> internalWindowClass = new Internal<>(null);
 
     public abstract void onInitialize(T disposable);
 

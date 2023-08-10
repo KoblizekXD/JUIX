@@ -51,4 +51,7 @@ public final class Reflection {
         return (Class<? extends IDisposable>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
     }
+    public Application<?> getAsApplication() {
+        return (Application<?>) getInstance();
+    }
 }
