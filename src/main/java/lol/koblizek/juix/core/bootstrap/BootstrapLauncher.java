@@ -10,6 +10,7 @@ import lol.koblizek.juix.core.Application;
 import lol.koblizek.juix.core.IDisposable;
 import lol.koblizek.juix.core.bootstrap.events.PreInitializationEvent;
 import lol.koblizek.juix.core.error.ApplicationNotFoundException;
+import lol.koblizek.juix.core.error.UnspecifiedEntrypointException;
 import lol.koblizek.juix.core.reflect.Reflection;
 import lol.koblizek.juix.core.resource.ResourceManager;
 import lombok.extern.log4j.Log4j2;
@@ -29,7 +30,19 @@ public final class BootstrapLauncher {
     @SuppressWarnings("deprecation")
     private static void launch() {
         try {
-            var type = (Class<? extends Application<? extends IDisposable>>) Class.forName(loadProperties());
+            ResourceManager manager = ResourceManager.getInstance();
+            Class<? extends Application<? extends IDisposable>> type = null;
+            if (manager.propertiesExist()) {
+                var properties = manager.getProperties();
+                try {
+                    type = (Class<? extends Application<? extends IDisposable>>) Class.forName(properties.getProperty("entrypoint"));
+                } catch (ClassNotFoundException e) {
+                    log.fatal("Couldn't find class: {}", properties.getProperty("entrypoint"));
+                }
+            } else {
+                log.fatal("Property file not found", new UnspecifiedEntrypointException());
+                System.exit(1);
+            }
             var libload = LibLoad.inType(type);
             libload.system("kernel32", "user32");
             libload.loadAll();
@@ -52,6 +65,7 @@ public final class BootstrapLauncher {
             log.fatal("Application failed to run with exception: ", e); 
         }
     }
+    @Deprecated
     public static String loadProperties() {
         var props = ResourceManager.getInstance()
                 .getResource("/juix.properties");
