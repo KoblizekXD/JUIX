@@ -43,6 +43,9 @@ tasks {
     withType<JavaExec> {
         jvmArgs(ENABLE_PREVIEW)
     }
+    withType<Test> {
+        jvmArgs(ENABLE_PREVIEW)
+    }
 }
 
 tasks.test {
