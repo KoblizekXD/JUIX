@@ -7,6 +7,7 @@ import lol.koblizek.juix.api.libload.LibLoad;
 import lol.koblizek.juix.api.window.Window;
 import lol.koblizek.juix.core.Application;
 import lol.koblizek.juix.core.IDisposable;
+import lol.koblizek.juix.core.bootstrap.events.ApplicationCrashEvent;
 import lol.koblizek.juix.core.bootstrap.events.PreInitializationEvent;
 import lol.koblizek.juix.core.error.UnspecifiedEntrypointException;
 import lol.koblizek.juix.core.resource.ResourceManager;
@@ -70,7 +71,7 @@ public final class BootstrapLauncher {
             try (Arena arena = Arena.openConfined()) {
                 WindowClass windowClass = new WindowClass(arena)
                         .setClassName(application.getName())
-                        .setWindowProcess(new WindowProcess());
+                        .setWindowProcess(new WindowProcess(application));
                 log.info("Registering window class...");
                 windowClass.register();
                 Window window = new Window(windowClass);
@@ -80,6 +81,7 @@ public final class BootstrapLauncher {
                 window.show(arena);
             }
         } catch (Exception e) {
+            EventManager.invoke(new ApplicationCrashEvent(app));
             log.fatal("Application failed to run with exception: ", e); 
         }
     }
@@ -87,7 +89,7 @@ public final class BootstrapLauncher {
     /**
      * Loads main property file and gets the value of entrypoint field
      *
-     * @deprecated Deprecated since the come of new Resource api({@link lol.koblizek.juix.core.resource.ResourceManager ResourceManagaer})
+     * @deprecated Deprecated since the come of new Resource api({@link lol.koblizek.juix.core.resource.ResourceManager ResourceManager})
      * @return value of "entrypoint" property inside "juix.properties" file
      */
     @Deprecated
