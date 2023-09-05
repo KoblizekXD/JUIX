@@ -11,6 +11,11 @@ public final class EventManager {
 
     private EventManager() {}
 
+    /**
+     * Invokes an event, all handlers(method which has 1 parameter - instance of the event) are invoked in order returned by Reflections library
+     *
+     * @param e event to be invoked
+     */
     public static void invoke(Event e) {
         var responses = Reflection.REFLECTIONS.getMethodsWithParameter(e.getClass());
         for (Method response : responses) {

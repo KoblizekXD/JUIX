@@ -18,10 +18,31 @@ import java.util.Properties;
 
 @Log4j2
 public final class BootstrapLauncher {
+    /**
+     * Writes a simple error message for an internal win32 api error,
+     * the full list of errors is available on Microsoft site(just google "win32 api error codes bruh")
+     *
+     * @param code error code to write out
+     */
     public static void writeWin32Error(int code) {
         log.error("An error occurred, code: {}", code);
         log.error("Please refer to Microsoft documentation for further details");
     }
+
+    /**
+     * Attempts to launch a main application runtime, any error will result to automatic application termination.
+     * Loads all native libraries using LibLoad api and uses experimental features of JDK 21.<br>
+     * Standard launch procedure is following:
+     * <ul>
+     *     <li>Find a class corresponding to launch options</li>
+     *     <li>Load all native libraries(user included and system)</li>
+     *     <li>Create new instance of the application</li>
+     *     <li>Register the window class</li>
+     *     <li>Display the window</li>
+     * </ul>
+     *
+     * @param app Application class - can be null if you want to find it automatically from property file
+     */
     @SuppressWarnings("deprecation")
     private static void launch(Class<? extends Application<? extends IDisposable>> app) {
         try {
@@ -62,6 +83,13 @@ public final class BootstrapLauncher {
             log.fatal("Application failed to run with exception: ", e); 
         }
     }
+
+    /**
+     * Loads main property file and gets the value of entrypoint field
+     *
+     * @deprecated Deprecated since the come of new Resource api({@link lol.koblizek.juix.core.resource.ResourceManager ResourceManagaer})
+     * @return value of "entrypoint" property inside "juix.properties" file
+     */
     @Deprecated
     public static String loadProperties() {
         var props = ResourceManager.getInstance()
@@ -75,9 +103,20 @@ public final class BootstrapLauncher {
         }
     }
 
+    /**
+     * Launches the app, please don't use it as normal library user
+     *
+     * @param args program args(unused)
+     */
     public static void main(String[] args) {
         launch(null);
     }
+
+    /**
+     * Launches the application in specific method(without the need of special launch configuration)
+     *
+     * @param app Application to launch
+     */
     public static void inCustomMain(Class<? extends Application<? extends IDisposable>> app) {
         launch(app);
     }
