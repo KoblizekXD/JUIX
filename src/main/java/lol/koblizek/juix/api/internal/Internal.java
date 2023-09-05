@@ -24,7 +24,7 @@ public class Internal<T> {
      */
     public T get() {
         var trace = new Throwable().getStackTrace();
-        var element = trace[trace.length-1];
+        var element = trace[2];
         if (!element.getClassName().startsWith("lol.koblizek.juix")) {
             throw new UnsatisfiedInternalAccessException();
         }
@@ -36,7 +36,7 @@ public class Internal<T> {
      */
     public void set(T val) {
         var trace = new Throwable().getStackTrace();
-        var element = trace[trace.length-1];
+        var element = trace[2];
         if (!element.getClassName().startsWith("lol.koblizek.juix")) {
             throw new UnsatisfiedInternalAccessException();
         }
@@ -48,9 +48,9 @@ public class Internal<T> {
      */
     public static void check() {
         var trace = new Throwable().getStackTrace();
-        var element = trace[trace.length-1];
+        var element = trace[2];
         if (!element.getClassName().startsWith("lol.koblizek.juix")) {
-            throw new UnsatisfiedInternalAccessException();
+            throw new UnsatisfiedInternalAccessException(element.getClassName());
         }
     }
 }

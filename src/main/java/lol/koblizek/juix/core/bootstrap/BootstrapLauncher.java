@@ -1,6 +1,5 @@
 package lol.koblizek.juix.core.bootstrap;
 
-import com.microsoft.win32.WNDCLASSA;
 import lol.koblizek.juix.api.WindowClass;
 import lol.koblizek.juix.api.WindowProcess;
 import lol.koblizek.juix.api.event.EventManager;
@@ -9,17 +8,13 @@ import lol.koblizek.juix.api.window.Window;
 import lol.koblizek.juix.core.Application;
 import lol.koblizek.juix.core.IDisposable;
 import lol.koblizek.juix.core.bootstrap.events.PreInitializationEvent;
-import lol.koblizek.juix.core.error.ApplicationNotFoundException;
 import lol.koblizek.juix.core.error.UnspecifiedEntrypointException;
-import lol.koblizek.juix.core.reflect.Reflection;
 import lol.koblizek.juix.core.resource.ResourceManager;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.util.Properties;
-
-import static com.microsoft.win32.windows_h_14.GetLastError;
 
 @Log4j2
 public final class BootstrapLauncher {
@@ -28,17 +23,19 @@ public final class BootstrapLauncher {
         log.error("Please refer to Microsoft documentation for further details");
     }
     @SuppressWarnings("deprecation")
-    private static void launch() {
+    private static void launch(Class<? extends Application<? extends IDisposable>> app) {
         try {
             ResourceManager manager = ResourceManager.getInstance();
             Class<? extends Application<? extends IDisposable>> type = null;
-            if (manager.propertiesExist()) {
+            if (app == null && manager.propertiesExist()) {
                 var properties = manager.getProperties();
                 try {
                     type = (Class<? extends Application<? extends IDisposable>>) Class.forName(properties.getProperty("entrypoint"));
                 } catch (ClassNotFoundException e) {
                     log.fatal("Couldn't find class: {}", properties.getProperty("entrypoint"));
                 }
+            } else if (app != null) {
+                type = app;
             } else {
                 log.fatal("Property file not found", new UnspecifiedEntrypointException());
                 System.exit(1);
@@ -79,9 +76,9 @@ public final class BootstrapLauncher {
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(null);
     }
-    public static void inCustomMain() {
-        launch();
+    public static void inCustomMain(Class<? extends Application<? extends IDisposable>> app) {
+        launch(app);
     }
 }
