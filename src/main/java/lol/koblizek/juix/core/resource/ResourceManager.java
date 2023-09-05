@@ -40,7 +40,12 @@ public final class ResourceManager {
     public Resource getResource(String location) {
         URL resource = getClass().getResource(location);
         if (resource == null) return null;
-        return new Resource(resource, getClass().getResourceAsStream(location));
+        try {
+            return new Resource(resource, resource.openStream());
+        } catch (IOException e) {
+            log.fatal("An unknown exception IO has occurred during obtaining required resources!");
+            return null;
+        }
     }
 
     /**
