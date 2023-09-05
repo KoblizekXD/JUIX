@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Open API for loading native libraries
+ */
 @Getter
 @Log4j2
 public final class LibLoad {
@@ -12,6 +15,10 @@ public final class LibLoad {
     private final boolean present;
     private String[] system;
 
+    /**
+     * @param app class corresponding to application being launched
+     * @param present whether is the annotation present on the application class
+     */
     public LibLoad(Class<? extends Application> app, boolean present) {
         this.app = app;
         this.present = present;
@@ -36,6 +43,11 @@ public final class LibLoad {
     public void system(String... names) {
         this.system = names;
     }
+
+    /**
+     * Loads all system and user-defined native libraries, if the loading failed application will have status FAILED,
+     * SUCCESS otherwise.
+     */
     public void loadAll() {
         var libraries = getLoadingLibraries();
         log.info("Native libraries preload. Found {} system libraries and {} user-defined", system.length, libraries.length);
