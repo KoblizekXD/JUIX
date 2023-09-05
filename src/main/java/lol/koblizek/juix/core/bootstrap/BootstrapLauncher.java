@@ -19,7 +19,7 @@ import java.util.Properties;
 @Log4j2
 public final class BootstrapLauncher {
     public static void writeWin32Error(int code) {
-        log.error("Failed to dispose window: {}", code);
+        log.error("An error occurred, code: {}", code);
         log.error("Please refer to Microsoft documentation for further details");
     }
     @SuppressWarnings("deprecation")
