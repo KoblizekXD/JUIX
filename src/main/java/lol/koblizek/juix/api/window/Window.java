@@ -11,7 +11,6 @@ import java.lang.foreign.Arena;
 import static com.microsoft.win32.windows_h_14.GetLastError;
 import static com.microsoft.win32.windows_h_16.*;
 import static com.microsoft.win32.windows_h_34.WS_OVERLAPPEDWINDOW;
-import static com.microsoft.win32.windows_h_34.WS_VISIBLE;
 import static java.lang.foreign.MemorySegment.NULL;
 
 /**

@@ -47,6 +47,7 @@ public final class BootstrapLauncher {
     @SuppressWarnings("deprecation")
     private static void launch(Class<? extends Application<? extends IDisposable>> app) {
         try {
+            log.info("Resource manager v2: initalizing");
             ResourceManager manager = ResourceManager.getInstance();
             Class<? extends Application<? extends IDisposable>> type = null;
             if (app == null && manager.propertiesExist()) {
