@@ -1,6 +1,5 @@
 # JUIX  
-Windows UI framework for everyone(prerelease state),  
-uses the new Panama API coming, therefore **requires JDK 21 or JDK 20 with enabled preview** to run
+Simple and easy to use Java Windows framework, written using the new project Panama coming with JDK 21
 
 ### Installation  
 We currently don't provide any releases, you will have to build one yourself  
