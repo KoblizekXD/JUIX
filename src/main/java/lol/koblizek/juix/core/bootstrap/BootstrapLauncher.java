@@ -75,11 +75,11 @@ public final class BootstrapLauncher {
                         .setWindowProcess(new WindowProcess(application));
                 log.info("Registering window class...");
                 windowClass.register();
-                Window window = new Window(windowClass);
+                Window window = new Window(arena, windowClass);
                 application.internalWindowClass.set(windowClass);
                 application.internalWindow.set(window);
                 application.onInitialize(window);
-                window.show(arena);
+                window.show();
             }
         } catch (Exception e) {
             EventManager.invoke(new ApplicationCrashEvent(app));

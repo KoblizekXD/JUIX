@@ -14,7 +14,7 @@ import static com.microsoft.win32.windows_h_6.SPI_GETNONCLIENTMETRICS;
 public class TestApp extends Application<Window> {
     @Override
     public void onInitialize(Window disposable) {
-
+        disposable.resize(700, 200);
     }
     @Test
     void testLaunch() {
